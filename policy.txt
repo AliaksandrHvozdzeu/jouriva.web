@@ -1,0 +1,70 @@
+﻿Jouriva Privacy Policy / Политика конфиденциальности Jouriva
+Updated: 2026-02-15
+
+EN
+
+Overview
+Jouriva ("the App") provides route planning, route preview, and video export.
+
+Data We Process
+- Search queries entered by the user (start point, stops, destination) to find places.
+- Route coordinates used to display routes and generate exported videos.
+- Device/app identifiers required for app functionality, diagnostics, and ad delivery.
+- Advertising identifier (AD_ID), when required by Google Mobile Ads SDK and platform policy.
+
+Ads
+- The App uses rewarded ads before video export.
+- Where legally required, consent for personalized/non-personalized ads is requested through Google User Messaging Platform (UMP).
+
+Third-Party Services
+- OpenStreetMap Nominatim and Photon for geocoding and place search.
+- Google Mobile Ads (AdMob) for rewarded ads.
+
+Storage
+- Exported videos are saved to the device gallery.
+- Some app state and preferences may be stored locally to keep app behavior consistent.
+
+Data Sharing
+- We do not sell personal data.
+- Data may be processed by the third-party providers listed above to deliver app features.
+
+User Choices
+- You can manage ad privacy options in Settings -> Privacy choices.
+- You can avoid rewarded ads by not starting video export.
+
+Contact
+For privacy questions, use the developer email shown on the Google Play listing.
+
+RU
+
+Общая информация
+Jouriva («Приложение») предоставляет функции построения маршрута, предпросмотра и экспорта видео.
+
+Какие данные обрабатываются
+- Поисковые запросы пользователя (старт, промежуточные точки, пункт назначения) для поиска мест.
+- Координаты маршрута для отображения маршрута и создания экспортируемого видео.
+- Идентификаторы устройства/приложения, необходимые для работы приложения, диагностики и показа рекламы.
+- Рекламный идентификатор (AD_ID), когда это требуется Google Mobile Ads SDK и правилами платформы.
+
+Реклама
+- Приложение использует rewarded-рекламу перед экспортом видео.
+- В регионах, где это требуется законом, согласие на персонализированную/неперсонализированную рекламу запрашивается через Google UMP.
+
+Сторонние сервисы
+- OpenStreetMap Nominatim и Photon для геокодирования и поиска мест.
+- Google Mobile Ads (AdMob) для rewarded-рекламы.
+
+Хранение
+- Экспортированные видео сохраняются в галерее устройства.
+- Часть состояния и настроек приложения может храниться локально для корректной работы.
+
+Передача данных
+- Мы не продаем персональные данные.
+- Данные могут обрабатываться сторонними сервисами, указанными выше, для работы функций приложения.
+
+Выбор пользователя
+- Параметры рекламной конфиденциальности доступны в Settings -> Privacy choices.
+- Вы можете не запускать экспорт, если не хотите смотреть rewarded-рекламу.
+
+Контакты
+По вопросам конфиденциальности используйте email разработчика, указанный в карточке приложения Google Play.
