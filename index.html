@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Jouriva - Route Planning & Map Animation</title>
-  <meta name="description" content="Jouriva is a route planning and map animation app for creating short route videos.">
-  <link rel="icon" type="image/png" href="images/jouriva_icon_transparent.png">
+  <title>Jouriva - Travel Route Video Creator</title>
+  <meta name="description" content="Jouriva is a fun travel video creator for visualizing your journey and exporting social-ready route videos.">
+  <link rel="icon" type="image/png" href="images/final_icon.png">
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <style>
     :root {
@@ -16,6 +16,8 @@
     }
 
     body {
+      position: relative;
+      overflow-x: hidden;
       background:
         radial-gradient(circle at 15% -10%, #d6e7ff 0%, rgba(214, 231, 255, 0) 45%),
         radial-gradient(circle at 90% 15%, #d8fff7 0%, rgba(216, 255, 247, 0) 40%),
@@ -23,10 +25,86 @@
       color: var(--jouriva-navy);
     }
 
+    .bg-orb {
+      position: fixed;
+      z-index: -1;
+      border-radius: 50%;
+      filter: blur(2px);
+      opacity: .45;
+      pointer-events: none;
+      animation: floatOrb 14s ease-in-out infinite;
+    }
+
+    .bg-orb.one {
+      width: 360px;
+      height: 360px;
+      top: -120px;
+      right: -80px;
+      background: radial-gradient(circle at 30% 30%, rgba(31, 111, 235, 0.35), rgba(31, 111, 235, 0));
+    }
+
+    .bg-orb.two {
+      width: 420px;
+      height: 420px;
+      bottom: -140px;
+      left: -120px;
+      background: radial-gradient(circle at 60% 45%, rgba(38, 208, 185, 0.32), rgba(38, 208, 185, 0));
+      animation-delay: -6s;
+    }
+
+    @keyframes floatOrb {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+      50% { transform: translate3d(0, -18px, 0) scale(1.05); }
+    }
+
+    .jouriva-nav {
+      backdrop-filter: blur(8px);
+      transition: box-shadow .25s ease, background-color .25s ease;
+    }
+
+    .jouriva-nav.scrolled {
+      background-color: rgba(255, 255, 255, 0.9) !important;
+      box-shadow: 0 10px 25px rgba(17, 48, 106, 0.1);
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      border: 1px solid rgba(31, 111, 235, 0.2);
+      border-radius: 999px;
+      padding: .2rem;
+      background: rgba(255, 255, 255, 0.9);
+      gap: .25rem;
+    }
+
+    .lang-btn {
+      border: 0;
+      background: transparent;
+      color: #385381;
+      font-weight: 700;
+      font-size: .78rem;
+      line-height: 1;
+      padding: .35rem .65rem;
+      border-radius: 999px;
+      transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
+    }
+
+    .lang-btn.active {
+      background: linear-gradient(135deg, #1f6feb, #2a87ff);
+      color: #fff;
+      box-shadow: 0 6px 14px rgba(31, 111, 235, 0.3);
+    }
+
     .jouriva-brand {
       width: 42px;
       height: 42px;
       object-fit: contain;
+      border-radius: 11px;
+      filter: drop-shadow(0 4px 10px rgba(17, 48, 106, 0.22));
+      transition: transform .25s ease;
+    }
+
+    .navbar-brand:hover .jouriva-brand {
+      transform: rotate(-5deg) scale(1.04);
     }
 
     .hero {
@@ -55,15 +133,196 @@
       background: rgba(255, 255, 255, 0.72);
       backdrop-filter: blur(8px);
       box-shadow: 0 12px 32px rgba(25, 52, 105, 0.08);
+      transition: transform .28s ease, box-shadow .28s ease;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 34px rgba(25, 52, 105, 0.14);
     }
 
     .feature-card {
       height: 100%;
     }
 
+    .steps-grid .step-col {
+      position: relative;
+    }
+
+    .steps-grid .feature-card {
+      position: relative;
+      padding-top: 3rem !important;
+      overflow: visible;
+    }
+
+    .steps-grid .feature-card::before {
+      content: attr(data-step);
+      position: absolute;
+      top: .9rem;
+      left: 1rem;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: #0e3d8c;
+      background: linear-gradient(135deg, #e9f1ff, #d8fff8);
+      border: 1px solid rgba(31, 111, 235, 0.22);
+      border-radius: 999px;
+      padding: .2rem .6rem;
+    }
+
+    @media (min-width: 992px) {
+      .steps-grid .step-col:not(:nth-child(3n)) .feature-card::after {
+        content: "";
+        position: absolute;
+        right: -1.05rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1.75rem;
+        height: 1.75rem;
+        border-radius: 999px;
+        z-index: 5;
+        background-color: #1f6feb;
+        background-image: url("images/double_arrow_24dp_FFFFFF.svg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 14px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 8px 18px rgba(17, 48, 106, 0.3);
+      }
+
+      .steps-grid .step-col:nth-child(3n):not(:last-child) .feature-card::after {
+        content: "";
+        position: absolute;
+        top: auto;
+        right: 50%;
+        bottom: -1.1rem;
+        transform: translateX(50%) rotate(90deg);
+        width: 1.75rem;
+        height: 1.75rem;
+        border-radius: 999px;
+        z-index: 5;
+        background-color: #1f6feb;
+        background-image: url("images/double_arrow_24dp_FFFFFF.svg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 14px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 8px 18px rgba(17, 48, 106, 0.3);
+      }
+
+      .steps-grid .step-col.flow-end .feature-card::after {
+        content: none !important;
+      }
+
+      .steps-grid .step-col.flow-left .feature-card::after {
+        content: "";
+        position: absolute;
+        left: -1.05rem;
+        right: auto;
+        top: 50%;
+        bottom: auto;
+        transform: translateY(-50%) rotate(180deg);
+        width: 1.75rem;
+        height: 1.75rem;
+        border-radius: 999px;
+        z-index: 5;
+        background-color: #1f6feb;
+        background-image: url("images/double_arrow_24dp_FFFFFF.svg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 14px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 8px 18px rgba(17, 48, 106, 0.3);
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 991.98px) {
+      .steps-grid .step-col:not(:nth-child(2n)) .feature-card::after {
+        content: "";
+        position: absolute;
+        right: -1.05rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1.75rem;
+        height: 1.75rem;
+        border-radius: 999px;
+        z-index: 5;
+        background-color: #1f6feb;
+        background-image: url("images/double_arrow_24dp_FFFFFF.svg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 14px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 8px 18px rgba(17, 48, 106, 0.3);
+      }
+
+      .steps-grid .step-col:nth-child(2n):not(:last-child) .feature-card::after {
+        content: "";
+        position: absolute;
+        top: auto;
+        right: 50%;
+        bottom: -1.1rem;
+        transform: translateX(50%) rotate(90deg);
+        width: 1.75rem;
+        height: 1.75rem;
+        border-radius: 999px;
+        z-index: 5;
+        background-color: #1f6feb;
+        background-image: url("images/double_arrow_24dp_FFFFFF.svg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 14px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 8px 18px rgba(17, 48, 106, 0.3);
+      }
+    }
+
+    @media (max-width: 767.98px) {
+      .steps-grid .step-col.step-1 { order: 1; }
+      .steps-grid .step-col.step-2 { order: 2; }
+      .steps-grid .step-col.step-3 { order: 3; }
+      .steps-grid .step-col.step-4 { order: 4; }
+      .steps-grid .step-col.step-5 { order: 5; }
+      .steps-grid .step-col.step-6 { order: 6; }
+
+      .steps-grid .step-col:not(.step-6) .feature-card::after {
+        content: "";
+        position: absolute;
+        right: 50%;
+        bottom: -1.1rem;
+        transform: translateX(50%) rotate(90deg);
+        width: 1.75rem;
+        height: 1.75rem;
+        border-radius: 999px;
+        z-index: 5;
+        background-color: #1f6feb;
+        background-image: url("images/double_arrow_24dp_FFFFFF.svg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 14px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 8px 18px rgba(17, 48, 106, 0.3);
+      }
+    }
+
     .section-title {
       font-weight: 700;
       letter-spacing: -0.01em;
+    }
+
+    .hero-shot {
+      width: 100%;
+      border-radius: 1rem;
+      aspect-ratio: 3 / 2;
+      object-fit: cover;
+      object-position: center;
+      box-shadow: 0 12px 28px rgba(16, 35, 72, 0.16);
+      transition: transform .4s ease;
+    }
+
+    .hero-shot:hover {
+      transform: scale(1.02);
     }
 
     .screen-img {
@@ -72,6 +331,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: center;
       transition: transform .3s ease;
     }
 
@@ -81,31 +341,155 @@
 
     .screen-tile {
       height: 100%;
-      min-height: 240px;
-      padding: .4rem;
+      min-height: 250px;
+      padding: 0;
       border-radius: 1.2rem;
       background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(234, 244, 255, 0.95));
       border: 1px solid rgba(15, 29, 58, 0.08);
       box-shadow: 0 10px 26px rgba(16, 35, 72, 0.08);
+      transition: transform .28s ease, box-shadow .28s ease;
+      overflow: hidden;
+    }
+
+    .screen-tile:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 30px rgba(16, 35, 72, 0.14);
+    }
+
+    .screen-tile.portrait {
+      aspect-ratio: 2 / 3;
+    }
+
+    .screens-carousel-wrap {
+      position: relative;
+      padding: 0 2.75rem;
+    }
+
+    .screens-carousel-track {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding: .2rem 0 .75rem;
+    }
+
+    .screens-carousel-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .screens-slide {
+      flex: 0 0 calc((100% - 3rem) / 4);
+      min-width: 210px;
+      scroll-snap-align: start;
+    }
+
+    .screens-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 2.2rem;
+      height: 2.2rem;
+      border: 0;
+      border-radius: 999px;
+      color: #fff;
+      background-color: #1f6feb;
+      background-image:
+        url("images/double_arrow_24dp_FFFFFF.svg"),
+        linear-gradient(135deg, #1f6feb, #2a87ff);
+      background-repeat: no-repeat, no-repeat;
+      background-position: center, center;
+      background-size: 16px 16px, cover;
+      box-shadow: 0 10px 20px rgba(17, 48, 106, 0.26);
+      z-index: 2;
+    }
+
+    .screens-arrow.prev { left: 0; }
+    .screens-arrow.next { right: 0; }
+    .screens-arrow.prev { transform: translateY(-50%) rotate(180deg); }
+
+    .screens-arrow:disabled {
+      background-color: #5c9bff;
+      background-image:
+        url("images/double_arrow_24dp_FFFFFF.svg"),
+        linear-gradient(135deg, #5c9bff, #78b0ff);
+      cursor: default;
+      box-shadow: none;
+    }
+
+    @media (max-width: 767.98px) {
+      .hero {
+        padding: 4.5rem 0 2.5rem;
+      }
+
+      .screen-tile {
+        min-height: 200px;
+      }
+
+      .screens-carousel-wrap {
+        padding: 0 .2rem;
+      }
+
+      .screens-slide {
+        flex: 0 0 72%;
+        min-width: 0;
+      }
+
+      .screens-arrow {
+        display: none;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 991.98px) {
+      .screens-slide {
+        flex: 0 0 calc((100% - 1rem) / 2);
+      }
+    }
+
+    @media (min-width: 992px) and (max-width: 1199.98px) {
+      .screens-slide {
+        flex: 0 0 calc((100% - 2rem) / 3);
+      }
     }
 
     .cta-card {
       background: linear-gradient(135deg, #12306a, #1f6feb 58%, #26d0b9 100%);
       color: #fff;
       border-radius: 1rem;
+      box-shadow: 0 16px 34px rgba(18, 48, 106, 0.3);
     }
 
     .footer-note {
       color: #506280;
       font-size: .94rem;
     }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: .08s; }
+    .reveal-delay-2 { transition-delay: .16s; }
+    .reveal-delay-3 { transition-delay: .24s; }
+    .reveal-delay-4 { transition-delay: .32s; }
   </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg sticky-top bg-white bg-opacity-75 border-bottom border-primary-subtle">
+<div class="bg-orb one"></div>
+<div class="bg-orb two"></div>
+
+<nav class="navbar navbar-expand-lg sticky-top bg-white bg-opacity-75 border-bottom border-primary-subtle jouriva-nav">
   <div class="container py-1">
     <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="#top">
-      <img src="images/jouriva_icon_transparent.png" alt="Jouriva icon" class="jouriva-brand">
+      <img src="images/final_icon.png" alt="Jouriva icon" class="jouriva-brand">
       <span>Jouriva</span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#jourivaNav" aria-controls="jourivaNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -113,9 +497,15 @@
     </button>
     <div class="collapse navbar-collapse" id="jourivaNav">
       <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
-        <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
-        <li class="nav-item"><a class="nav-link" href="#screens">Screenshots</a></li>
-        <li class="nav-item"><a class="nav-link" href="#privacy">Privacy</a></li>
+        <li class="nav-item"><a class="nav-link" href="#features" data-i18n="nav_features">Features</a></li>
+        <li class="nav-item"><a class="nav-link" href="#screens" data-i18n="nav_screens">Screenshots</a></li>
+        <li class="nav-item"><a class="nav-link" href="#privacy" data-i18n="nav_privacy">Privacy</a></li>
+        <li class="nav-item ms-lg-2">
+          <div class="lang-switch" role="group" aria-label="Language switcher">
+            <button type="button" class="lang-btn active" data-lang="en">EN</button>
+            <button type="button" class="lang-btn" data-lang="ru">RU</button>
+          </div>
+        </li>
       </ul>
     </div>
   </div>
@@ -124,19 +514,19 @@
 <header id="top" class="hero">
   <div class="container">
     <div class="row align-items-center g-4">
-      <div class="col-lg-7">
-        <span class="hero-chip mb-3">Route Planning & Map Animation</span>
-        <h1 class="hero-title display-5 mt-2">Jouriva: short route videos in just a few minutes</h1>
-        <p class="lead mt-3 mb-4">Build routes with a start point, intermediate stops, and destination, preview animated movement on the map, and export the final result to your gallery.</p>
+      <div class="col-lg-7 reveal">
+        <span class="hero-chip mb-3" data-i18n="hero_chip">Travel Route Video Creator</span>
+        <h1 class="hero-title display-5 mt-2" data-i18n="hero_title">Turn your journey into a stylish animated story</h1>
+        <p class="lead mt-3 mb-4" data-i18n="hero_desc">Jouriva is a fun travel video creator that helps you build a route, choose transport, watch movement across the map, and export a ready-to-post video for social media.</p>
         <div class="d-flex flex-wrap gap-2">
-          <a class="btn btn-primary btn-lg" href="#features">Explore Features</a>
-          <a class="btn btn-outline-primary btn-lg" href="#privacy">Privacy & Ads</a>
+          <a class="btn btn-primary btn-lg" href="#features" data-i18n="hero_btn_features">Explore Features</a>
+          <a class="btn btn-outline-primary btn-lg" href="#privacy" data-i18n="hero_btn_privacy">Privacy & Ads</a>
         </div>
       </div>
-      <div class="col-lg-5">
+      <div class="col-lg-5 reveal reveal-delay-1">
         <div class="glass-card p-3 p-md-4">
-          <img src="images/1.jpg" class="img-fluid rounded-4" alt="Jouriva route preview">
-          <div class="mt-3 small text-secondary">Interface available in English and Russian.</div>
+          <img src="images/common.png" class="hero-shot" alt="Jouriva route preview">
+          <div class="mt-3 small text-secondary" data-i18n="hero_note_langs">Interface available in English and Russian.</div>
         </div>
       </div>
     </div>
@@ -145,42 +535,42 @@
 
 <section id="features" class="pb-5">
   <div class="container">
-    <h2 class="section-title mb-4">Key Features</h2>
-    <div class="row g-3 g-md-4">
-      <div class="col-md-6 col-lg-4">
-        <div class="glass-card p-4 feature-card">
-          <h3 class="h5">Route Builder</h3>
-          <p class="mb-0">Set a start point, intermediate stops, and destination in one simple editor.</p>
+    <h2 class="section-title mb-4 reveal" data-i18n="features_title">What You Can Do</h2>
+    <div class="row g-3 g-md-4 steps-grid">
+      <div class="col-md-6 col-lg-4 step-col step-1">
+        <div class="glass-card p-4 feature-card reveal" data-step="Step 1" data-i18n-step="step_1_badge">
+          <h3 class="h5" data-i18n="step_1_title">Build Any Route</h3>
+          <p class="mb-0" data-i18n="step_1_desc">Add a start point, stops, and final destination in a simple route builder.</p>
         </div>
       </div>
-      <div class="col-md-6 col-lg-4">
-        <div class="glass-card p-4 feature-card">
-          <h3 class="h5">Live Map Animation</h3>
-          <p class="mb-0">Preview vehicle movement on the map in real time before export.</p>
+      <div class="col-md-6 col-lg-4 step-col step-2">
+        <div class="glass-card p-4 feature-card reveal reveal-delay-1" data-step="Step 2" data-i18n-step="step_2_badge">
+          <h3 class="h5" data-i18n="step_2_title">Choose Transport</h3>
+          <p class="mb-0" data-i18n="step_2_desc">Pick how you travel: car, bus, plane, or ship.</p>
         </div>
       </div>
-      <div class="col-md-6 col-lg-4">
-        <div class="glass-card p-4 feature-card">
-          <h3 class="h5">Country Flag Updates</h3>
-          <p class="mb-0">Flags update automatically as your route passes through countries.</p>
+      <div class="col-md-6 col-lg-4 step-col step-3">
+        <div class="glass-card p-4 feature-card reveal reveal-delay-2" data-step="Step 3" data-i18n-step="step_3_badge">
+          <h3 class="h5" data-i18n="step_3_title">Live Movement on Map</h3>
+          <p class="mb-0" data-i18n="step_3_desc">Watch your vehicle move along the route in real time.</p>
         </div>
       </div>
-      <div class="col-md-6 col-lg-4">
-        <div class="glass-card p-4 feature-card">
-          <h3 class="h5">Distance Modes</h3>
-          <p class="mb-0">Show distance in km, mi, or turn it off completely.</p>
+      <div class="col-md-6 col-lg-4 step-col step-6 flow-end">
+        <div class="glass-card p-4 feature-card reveal" data-step="Step 6" data-i18n-step="step_6_badge">
+          <h3 class="h5" data-i18n="step_6_title">Video Customization & Export</h3>
+          <p class="mb-0" data-i18n="step_6_desc">Tune speed, vehicle size, aspect ratio, and map details, then export straight to your device gallery.</p>
         </div>
       </div>
-      <div class="col-md-6 col-lg-4">
-        <div class="glass-card p-4 feature-card">
-          <h3 class="h5">Export Controls</h3>
-          <p class="mb-0">Adjust speed, model size, aspect ratio, and road/flag visibility.</p>
+      <div class="col-md-6 col-lg-4 step-col step-5 flow-left">
+        <div class="glass-card p-4 feature-card reveal reveal-delay-1" data-step="Step 5" data-i18n-step="step_5_badge">
+          <h3 class="h5" data-i18n="step_5_title">Distance Display</h3>
+          <p class="mb-0" data-i18n="step_5_desc">Show distance in km, mi, or hide it when you want a cleaner look.</p>
         </div>
       </div>
-      <div class="col-md-6 col-lg-4">
-        <div class="glass-card p-4 feature-card">
-          <h3 class="h5">Save to Gallery</h3>
-          <p class="mb-0">Exported videos are saved directly to your device gallery.</p>
+      <div class="col-md-6 col-lg-4 step-col step-4 flow-left">
+        <div class="glass-card p-4 feature-card reveal reveal-delay-2" data-step="Step 4" data-i18n-step="step_4_badge">
+          <h3 class="h5" data-i18n="step_4_title">Border-Aware Visuals</h3>
+          <p class="mb-0" data-i18n="step_4_desc">Country flags update automatically as your route crosses borders.</p>
         </div>
       </div>
     </div>
@@ -189,41 +579,44 @@
 
 <section id="screens" class="pb-5">
   <div class="container">
-    <h2 class="section-title mb-4">Jouriva in Action</h2>
-    <div class="row g-3 g-md-4">
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="screen-tile"><img src="images/1.jpg" alt="Jouriva app screen 1" class="screen-img"></div>
+    <h2 class="section-title mb-4 reveal" data-i18n="screens_title">Jouriva in Action</h2>
+    <div class="screens-carousel-wrap reveal">
+      <button class="screens-arrow prev" type="button" aria-label="Previous screenshots"></button>
+      <div class="screens-carousel-track" id="screensTrack">
+        <div class="screens-slide">
+          <div class="screen-tile portrait"><img src="images/first.png" alt="Jouriva app first screen" class="screen-img"></div>
+        </div>
+        <div class="screens-slide">
+          <div class="screen-tile portrait"><img src="images/select_trip.png" alt="Jouriva app trip selection" class="screen-img"></div>
+        </div>
+        <div class="screens-slide">
+          <div class="screen-tile portrait"><img src="images/choose_transport.png" alt="Jouriva app transport selection" class="screen-img"></div>
+        </div>
+        <div class="screens-slide">
+          <div class="screen-tile portrait"><img src="images/configure_trip.png" alt="Jouriva app route configuration" class="screen-img"></div>
+        </div>
+        <div class="screens-slide">
+          <div class="screen-tile portrait"><img src="images/rewie.png" alt="Jouriva app preview screen" class="screen-img"></div>
+        </div>
+        <div class="screens-slide">
+          <div class="screen-tile portrait"><img src="images/download.png" alt="Jouriva app export screen" class="screen-img"></div>
+        </div>
       </div>
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="screen-tile"><img src="images/2.jpg" alt="Jouriva app screen 2" class="screen-img"></div>
-      </div>
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="screen-tile"><img src="images/3.jpg" alt="Jouriva app screen 3" class="screen-img"></div>
-      </div>
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="screen-tile"><img src="images/4.jpg" alt="Jouriva app screen 4" class="screen-img"></div>
-      </div>
-      <div class="col-6 col-md-4 col-lg-4">
-        <div class="screen-tile"><img src="images/5.jpg" alt="Jouriva app screen 5" class="screen-img"></div>
-      </div>
-      <div class="col-6 col-md-4 col-lg-4">
-        <div class="screen-tile"><img src="images/6.jpg" alt="Jouriva app screen 6" class="screen-img"></div>
-      </div>
-      <div class="col-12 col-md-8 col-lg-4">
-        <div class="screen-tile"><img src="images/7.jpg" alt="Jouriva app screen 7" class="screen-img"></div>
-      </div>
+      <button class="screens-arrow next" type="button" aria-label="Next screenshots"></button>
     </div>
   </div>
 </section>
 
 <section id="privacy" class="pb-5">
   <div class="container">
-    <div class="glass-card p-4 p-md-5">
-      <h2 class="section-title mb-3">Ads and Privacy</h2>
+    <div class="glass-card p-4 p-md-5 reveal">
+      <h2 class="section-title mb-3" data-i18n="privacy_title">Ads & Privacy</h2>
       <ul class="mb-0">
-        <li>Video export is unlocked through rewarded ads.</li>
-        <li>Consent and privacy options are managed via Google UMP where required.</li>
-        <li>Privacy Policy access is available in the app settings.</li>
+        <li data-i18n="privacy_1">Video export is unlocked via rewarded ads.</li>
+        <li data-i18n="privacy_2">Consent and privacy options are handled where required.</li>
+        <li>
+          <span data-i18n="privacy_3_prefix">Privacy Policy is available in the app settings and </span><a href="policy.txt" target="_blank" rel="noopener noreferrer" data-i18n="privacy_3_link">here</a><span data-i18n="privacy_3_suffix">.</span>
+        </li>
       </ul>
     </div>
   </div>
@@ -231,9 +624,9 @@
 
 <section class="pb-5">
   <div class="container">
-    <div class="cta-card p-4 p-md-5">
-      <h2 class="fw-bold">Jouriva</h2>
-      <p class="mb-0">Built for fast route visualization and simple social-ready map video creation.</p>
+    <div class="cta-card p-4 p-md-5 reveal">
+      <h2 class="fw-bold" data-i18n="cta_title">Made for Sharing</h2>
+      <p class="mb-0" data-i18n="cta_desc">Jouriva is built for short social-ready route videos, perfect for Instagram, TikTok, Shorts, and travel memories. The app is available in English and Russian.</p>
     </div>
   </div>
 </section>
@@ -241,10 +634,182 @@
 <footer class="pb-4">
   <div class="container d-flex flex-column flex-md-row justify-content-between gap-2">
     <div class="footer-note">© 2026 Jouriva</div>
-    <div class="footer-note">Route Builder • Map Animation • Video Export</div>
+    <div class="footer-note" data-i18n="footer_right">Route Builder • Transport Modes • Social-Ready Video Export</div>
   </div>
 </footer>
 
 <script src="js/bootstrap.bundle.min.js"></script>
+<script>
+  (() => {
+    const nav = document.querySelector('.jouriva-nav');
+    const revealItems = document.querySelectorAll('.reveal');
+    const langButtons = document.querySelectorAll('.lang-btn');
+    const i18nNodes = document.querySelectorAll('[data-i18n]');
+    const i18nStepNodes = document.querySelectorAll('[data-i18n-step]');
+    const screensTrack = document.getElementById('screensTrack');
+    const screensPrev = document.querySelector('.screens-arrow.prev');
+    const screensNext = document.querySelector('.screens-arrow.next');
+    const i18n = {
+      en: {
+        page_title: 'Jouriva - Travel Route Video Creator',
+        page_desc: 'Jouriva is a fun travel video creator for visualizing your journey and exporting social-ready route videos.',
+        nav_features: 'Features',
+        nav_screens: 'Screenshots',
+        nav_privacy: 'Privacy',
+        hero_chip: 'Travel Route Video Creator',
+        hero_title: 'Turn your journey into a stylish animated story',
+        hero_desc: 'Jouriva is a fun travel video creator that helps you build a route, choose transport, watch movement across the map, and export a ready-to-post video for social media.',
+        hero_btn_features: 'Explore Features',
+        hero_btn_privacy: 'Privacy & Ads',
+        hero_note_langs: 'Interface available in English and Russian.',
+        features_title: 'What You Can Do',
+        step_1_badge: 'Step 1',
+        step_1_title: 'Build Any Route',
+        step_1_desc: 'Add a start point, stops, and final destination in a simple route builder.',
+        step_2_badge: 'Step 2',
+        step_2_title: 'Choose Transport',
+        step_2_desc: 'Pick how you travel: car, bus, plane, or ship.',
+        step_3_badge: 'Step 3',
+        step_3_title: 'Live Movement on Map',
+        step_3_desc: 'Watch your vehicle move along the route in real time.',
+        step_4_badge: 'Step 4',
+        step_4_title: 'Border-Aware Visuals',
+        step_4_desc: 'Country flags update automatically as your route crosses borders.',
+        step_5_badge: 'Step 5',
+        step_5_title: 'Distance Display',
+        step_5_desc: 'Show distance in km, mi, or hide it when you want a cleaner look.',
+        step_6_badge: 'Step 6',
+        step_6_title: 'Video Customization & Export',
+        step_6_desc: 'Tune speed, vehicle size, aspect ratio, and map details, then export straight to your device gallery.',
+        screens_title: 'Jouriva in Action',
+        privacy_title: 'Ads & Privacy',
+        privacy_1: 'Video export is unlocked via rewarded ads.',
+        privacy_2: 'Consent and privacy options are handled where required.',
+        privacy_3_prefix: 'Privacy Policy is available in the app settings and ',
+        privacy_3_link: 'here',
+        privacy_3_suffix: '.',
+        cta_title: 'Made for Sharing',
+        cta_desc: 'Jouriva is built for short social-ready route videos, perfect for Instagram, TikTok, Shorts, and travel memories. The app is available in English and Russian.',
+        footer_right: 'Route Builder • Transport Modes • Social-Ready Video Export'
+      },
+      ru: {
+        page_title: 'Jouriva - Создатель Видео Маршрутов',
+        page_desc: 'Jouriva - это приложение для создания travel-видео: визуализируйте путь и экспортируйте ролики для соцсетей.',
+        nav_features: 'Возможности',
+        nav_screens: 'Скриншоты',
+        nav_privacy: 'Конфиденциальность',
+        hero_chip: 'Создатель Travel-Видео Маршрутов',
+        hero_title: 'Превратите вашу поездку в стильную анимированную историю',
+        hero_desc: 'Jouriva помогает собрать маршрут, выбрать транспорт, посмотреть движение по карте и экспортировать готовое видео для публикации в соцсетях.',
+        hero_btn_features: 'Смотреть Возможности',
+        hero_btn_privacy: 'Реклама и Приватность',
+        hero_note_langs: 'Интерфейс доступен на английском и русском языках.',
+        features_title: 'Что Можно Сделать',
+        step_1_badge: 'Шаг 1',
+        step_1_title: 'Построить Маршрут',
+        step_1_desc: 'Добавьте точку старта, остановки и финальную точку назначения.',
+        step_2_badge: 'Шаг 2',
+        step_2_title: 'Выбрать Транспорт',
+        step_2_desc: 'Выберите тип транспорта: машина, автобус, самолет или корабль.',
+        step_3_badge: 'Шаг 3',
+        step_3_title: 'Смотреть Движение на Карте',
+        step_3_desc: 'Наблюдайте, как транспорт движется по маршруту в реальном времени.',
+        step_4_badge: 'Шаг 4',
+        step_4_title: 'Флаги при Пересечении Границ',
+        step_4_desc: 'Флаги стран автоматически меняются при пересечении границ.',
+        step_5_badge: 'Шаг 5',
+        step_5_title: 'Отображение Дистанции',
+        step_5_desc: 'Показывайте расстояние в км, милях или отключайте его полностью.',
+        step_6_badge: 'Шаг 6',
+        step_6_title: 'Настройка и Экспорт Видео',
+        step_6_desc: 'Настройте скорость, размер транспорта, формат кадра и детали карты, затем экспортируйте в галерею устройства.',
+        screens_title: 'Jouriva в Действии',
+        privacy_title: 'Реклама и Конфиденциальность',
+        privacy_1: 'Экспорт видео открывается через rewarded-рекламу.',
+        privacy_2: 'Согласие и настройки приватности обрабатываются там, где это требуется.',
+        privacy_3_prefix: 'Политика конфиденциальности доступна в настройках приложения и ',
+        privacy_3_link: 'здесь',
+        privacy_3_suffix: '.',
+        cta_title: 'Сделано для Публикаций',
+        cta_desc: 'Jouriva создан для коротких роликов маршрутов для Instagram, TikTok, Shorts и личных travel-воспоминаний. Приложение доступно на английском и русском.',
+        footer_right: 'Маршруты • Режимы Транспорта • Экспорт Видео для Соцсетей'
+      }
+    };
+
+    const applyLanguage = (lang) => {
+      const dict = i18n[lang] || i18n.en;
+
+      document.documentElement.lang = lang;
+      document.title = dict.page_title;
+
+      const descMeta = document.querySelector('meta[name="description"]');
+      if (descMeta) descMeta.setAttribute('content', dict.page_desc);
+
+      i18nNodes.forEach((node) => {
+        const key = node.dataset.i18n;
+        if (dict[key]) node.textContent = dict[key];
+      });
+
+      i18nStepNodes.forEach((node) => {
+        const key = node.dataset.i18nStep;
+        if (dict[key]) node.setAttribute('data-step', dict[key]);
+      });
+
+      langButtons.forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+    };
+
+    const updateNav = () => {
+      nav.classList.toggle('scrolled', window.scrollY > 12);
+    };
+    updateNav();
+    window.addEventListener('scroll', updateNav, { passive: true });
+
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('show');
+        obs.unobserve(entry.target);
+      });
+    }, { threshold: 0.14, rootMargin: '0px 0px -40px 0px' });
+
+    revealItems.forEach((el) => observer.observe(el));
+
+    langButtons.forEach((btn) => {
+      btn.addEventListener('click', () => applyLanguage(btn.dataset.lang));
+    });
+
+    if (screensTrack && screensPrev && screensNext) {
+      const getSlideStep = () => {
+        const firstSlide = screensTrack.querySelector('.screens-slide');
+        if (!firstSlide) return screensTrack.clientWidth * 0.8;
+        const slideWidth = firstSlide.getBoundingClientRect().width;
+        const gap = parseFloat(getComputedStyle(screensTrack).columnGap || getComputedStyle(screensTrack).gap || '16');
+        return slideWidth + gap;
+      };
+
+      const updateArrows = () => {
+        const maxScroll = screensTrack.scrollWidth - screensTrack.clientWidth - 1;
+        screensPrev.disabled = screensTrack.scrollLeft <= 0;
+        screensNext.disabled = screensTrack.scrollLeft >= maxScroll;
+      };
+
+      screensPrev.addEventListener('click', () => {
+        screensTrack.scrollBy({ left: -getSlideStep(), behavior: 'smooth' });
+      });
+
+      screensNext.addEventListener('click', () => {
+        screensTrack.scrollBy({ left: getSlideStep(), behavior: 'smooth' });
+      });
+
+      screensTrack.addEventListener('scroll', updateArrows, { passive: true });
+      window.addEventListener('resize', updateArrows);
+      updateArrows();
+    }
+
+    applyLanguage('en');
+  })();
+</script>
 </body>
 </html>
